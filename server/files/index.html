@@ -6,7 +6,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movies!</title>
     <style>
-        /* Part 3: Your styling goes here */
+        body {
+            font-family: 'Trebuchet MS', sans-serif;
+            background-color: #f4f4f4;
+            color: #222;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        article {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem auto;
+            max-width: 900px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        article h2 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        img {
+            display: block;
+            max-width: 220px;
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            line-height: 1.5;
+        }
+
+        span {
+            margin-right: 0.4rem;
+        }
+
+        .genre {
+            display: inline-block;
+            background-color: #e0e7ff;
+            padding: 0.3rem 0.6rem;
+            border-radius: 999px;
+            margin-right: 0.4rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .meta {
+            font-weight: bold;
+        }
+
+        .info-block {
+            margin-bottom: 0.8rem;
+        }
     </style>
     <script>
         function reverseString(s) {
@@ -18,8 +76,77 @@
             xhr.onload = function () {
                 const bodyElement = document.querySelector("body")
                 if (xhr.status == 200) {
-		            /* Part 2: Build the HTML elements here and append them to the body */ 
-                    bodyElement.append(reverseString(xhr.responseText))
+                    const movies = JSON.parse(xhr.responseText)
+
+                    const pageTitle = document.createElement("h1")
+                    pageTitle.textContent = "Movie Collection"
+                    bodyElement.append(pageTitle)
+
+                    movies.forEach(function (movie) {
+                        const article = document.createElement("article")
+
+                        const title = document.createElement("h2")
+                        title.textContent = movie.Title
+                        article.append(title)
+
+                        const poster = document.createElement("img")
+                        poster.src = movie.Poster
+                        poster.alt = movie.Title + " poster"
+                        article.append(poster)
+
+                        const released = document.createElement("p")
+                        released.className = "info-block"
+                        released.innerHTML = "<span class='meta'>Released:</span> " + movie.Released
+                        article.append(released)
+
+                        const runtime = document.createElement("p")
+                        runtime.className = "info-block"
+                        runtime.innerHTML = "<span class='meta'>Runtime:</span> " + movie.Runtime + " min"
+                        article.append(runtime)
+
+                        const genres = document.createElement("p")
+                        genres.className = "info-block"
+                        genres.innerHTML = "<span class='meta'>Genres:</span> "
+                        movie.Genres.forEach(function (genre) {
+                            const genreSpan = document.createElement("span")
+                            genreSpan.className = "genre"
+                            genreSpan.textContent = genre
+                            genres.append(genreSpan)
+                        })
+                        article.append(genres)
+
+                        const directors = document.createElement("p")
+                        directors.className = "info-block"
+                        directors.innerHTML = "<span class='meta'>Directors:</span> " + movie.Directors.join(", ")
+                        article.append(directors)
+
+                        const writers = document.createElement("p")
+                        writers.className = "info-block"
+                        writers.innerHTML = "<span class='meta'>Writers:</span> " + movie.Writers.join(", ")
+                        article.append(writers)
+
+                        const actors = document.createElement("p")
+                        actors.className = "info-block"
+                        actors.innerHTML = "<span class='meta'>Actors:</span> " + movie.Actors.join(", ")
+                        article.append(actors)
+
+                        const plot = document.createElement("p")
+                        plot.className = "info-block"
+                        plot.innerHTML = "<span class='meta'>Plot:</span> " + movie.Plot
+                        article.append(plot)
+
+                        const metascore = document.createElement("p")
+                        metascore.className = "info-block"
+                        metascore.innerHTML = "<span class='meta'>Metascore:</span> " + movie.Metascore
+                        article.append(metascore)
+
+                        const imdbRating = document.createElement("p")
+                        imdbRating.className = "info-block"
+                        imdbRating.innerHTML = "<span class='meta'>IMDb Rating:</span> " + movie.imdbRating
+                        article.append(imdbRating)
+
+                        bodyElement.append(article)
+                    })
                 } else {
                     bodyElement.append("Daten konnten nicht geladen werden, Status " + xhr.status + " - " + xhr.statusText)
                 }
